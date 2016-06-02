@@ -9,8 +9,9 @@ class ArffGenerator(object):
 
     # manually determine the paths, easier than commandline args
     _REL_PATH_TO_OPENFACE_OUTPUT_MAIN_DIR = "../attentionscorecalculator/head_pose_extraction/training_data"
+    #_REL_PATH_TO_OPENFACE_OUTPUT_MAIN_DIR = "C:/Users/Administrator/Desktop/hudc_processing/attentionscorecalculator/head_pose_extraction/training_data"#"../attentionscorecalculator/head_pose_extraction/training_data"
+    #_REL_PATH_TO_ARFF_DIR = "C:/Users/Administrator/Desktop/hudc_processing/attentionscorecalculator/head_pose_extraction/extracted_poses"#"../attentionscorecalculator/head_pose_extraction/extracted_poses"
     _REL_PATH_TO_ARFF_DIR = "../attentionscorecalculator/head_pose_extraction/extracted_poses"
-
 
     _CLASS_PAYING_ATTENTION = "paying_attention"
     _CLASS_NOT_PAYING_ATTENTION = "not_paying_attention"

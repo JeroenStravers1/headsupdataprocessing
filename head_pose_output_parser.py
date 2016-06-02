@@ -25,12 +25,13 @@ class HeadPoseOutputParser(object):
         """opens the entire file in a single line (openface returns an unformatted csv as output (no \n))
         returns the output file split item by item, and the indices required to read it."""
         with open(file_location, "r") as estimated_head_poses:
-            head_poses_output_as_single_line = estimated_head_poses.read().strip(("\n")
+            head_poses_output_as_single_line = estimated_head_poses.read().strip("\n")
             self._parse_unformatted_head_poses(head_poses_output_as_single_line, arff_file_line_number, file_location)
         return self._arff_dataline
 
     def _parse_unformatted_head_poses(self, poses_output, arff_file_line_number, file_location):
         """"splits the output file by ', ' -> leaving only the values"""
+        poses_output = poses_output.replace("\n", ", ")
         self._split_output_file = poses_output.split(self._DELIMITER)
         self._extract_index_of_success_rx_ry_rz_values()
         self._extract_arff_dataline_from_indices(arff_file_line_number, file_location)
@@ -72,8 +73,7 @@ class HeadPoseOutputParser(object):
 
     def _extract_arff_dataline_from_indices(self, arff_file_line_number, file_location):
         """generates a comma-separated string containing the required variables"""
-        self._arff_dataline = str(arff_file_line_number) + ","
-        self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rx)] + ","
+        #self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rx)] + ","
         self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_ry)] + ","
         self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rz)] + ","
         self._arff_dataline += self._get_attribute_class_for_file(file_location) + "\n"
@@ -83,7 +83,6 @@ class HeadPoseOutputParser(object):
     def _on_first_data_line(self, variable):
         """increments an index to skip to the first dataline"""
         next_line = (variable + (int(self._line_length)))
-        next_line -= 1
         return next_line
 
     def _get_attribute_class_for_file(self, filename):
