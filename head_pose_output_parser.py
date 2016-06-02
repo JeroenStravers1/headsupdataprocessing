@@ -73,13 +73,16 @@ class HeadPoseOutputParser(object):
 
     def _extract_arff_dataline_from_indices(self, arff_file_line_number, file_location):
         """generates a comma-separated string containing the required variables"""
-        #self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rx)] + ","
-        self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_ry)] + ","
-        self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rz)] + ","
-        self._arff_dataline += self._get_attribute_class_for_file(file_location) + "\n"
-        for item in self._split_output_file:
-            print (item)
-        print ("-----------")
+        successful_read = self._split_output_file[self._on_first_data_line(self._index_success)]
+        if int(successful_read) == 1:
+            self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rx)] + ","
+            self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_ry)] + ","
+            self._arff_dataline += self._split_output_file[self._on_first_data_line(self._index_rz)] + ","
+            self._arff_dataline += self._get_attribute_class_for_file(file_location) + "\n"
+            for item in self._split_output_file:
+                print (item)
+            print ("-----------")
+
     def _on_first_data_line(self, variable):
         """increments an index to skip to the first dataline"""
         next_line = (variable + (int(self._line_length)))
