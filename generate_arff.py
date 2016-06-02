@@ -37,13 +37,13 @@ class ArffGenerator(object):
         """initialises the .arff file with metadata"""
         arff_file_location = output_path + self._ARFF_FILE_NAME
         with open(self._arff_file_with_path, 'w+') as arff_file:
-            self._generate_arff_metadata()
+            arff_metadata = self._generate_arff_metadata()
             arff_file.write(arff_metadata)
 
     def _generate_arff_metadata(self):
         """generates the metadata for the original.arff file"""
         arff_metadata = "%s\n\n%s\n%s\n%s\n%s\n\n%s\n" \
-                    % (_ARFF_FILE_RELATION, _ARFF_FILE_RX, _ARFF_FILE_RY, _ARFF_FILE_RZ, _ARFF_FILE_CLASS, _ARFF_FILE_DATA)
+                    % (self._ARFF_FILE_RELATION, self._ARFF_FILE_RX, self._ARFF_FILE_RY, self._ARFF_FILE_RZ, self._ARFF_FILE_CLASS, self._ARFF_FILE_DATA)
         return arff_metadata
 
     def _combine_all_output(self):
@@ -62,6 +62,6 @@ class ArffGenerator(object):
                         arff_file.write(arff_data_line)
 
 if __name__ == "__main__":
-    path_to_main_image_folder = sys.argv[1]
-    arff_generator = ArffGenerator(path_to_main_image_folder)
+    
+    arff_generator = ArffGenerator()
     arff_generator.generate_arff_from_openface_output()
