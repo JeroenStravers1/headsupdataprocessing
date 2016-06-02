@@ -80,7 +80,7 @@ class HeadPoseOutputParser(object):
 
     def _on_first_data_line(self, variable):
         """increments an index to skip to the first dataline"""
-        return variable + self._line_length -1
+        return variable + self._line_length
 
     def _get_attribute_class_for_file(self, filename):
         if self._NOT_PAYING_ATTENTION in filename:
