@@ -87,8 +87,8 @@ class HeadPoseOutputParser(object):
 
     def _get_attribute_class_for_file(self, filename):
         if self._NOT_PAYING_ATTENTION in filename:
-            return self._NOT_PAYING_ATTENTION
-        return self._PAYING_ATTENTION
+            return ("'"+self._NOT_PAYING_ATTENTION+"'")
+        return ("'"+self._PAYING_ATTENTION+"'")
 
 if __name__ == "__main__":
     bob = HeadPoseOutputParser()
