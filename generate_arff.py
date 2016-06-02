@@ -2,7 +2,7 @@
 
 import sys
 import os
-from head_pose_output_parser import HeadPoseOutputParser as output_parser
+from head_pose_output_parser import HeadPoseOutputParser
 
 
 class ArffGenerator(object):
@@ -32,6 +32,7 @@ class ArffGenerator(object):
         """main caller function"""
         self._arff_file_with_path = self._REL_PATH_TO_ARFF_DIR + self._ARFF_FILE_NAME
         self._construct_arff_file(self._REL_PATH_TO_ARFF_DIR)
+        self._combine_all_output()
 
     def _construct_arff_file(self, output_path):
         """initialises the .arff file with metadata"""
