@@ -7,6 +7,11 @@ from head_pose_output_parser import HeadPoseOutputParser as output_parser
 
 class ArffGenerator(object):
 
+    # manually determine the paths, easier than commandline args
+    _REL_PATH_TO_OPENFACE_OUTPUT_MAIN_DIR = "../attentionscorecalculator/head_pose_extraction/training_data"
+    _REL_PATH_TO_ARFF_DIR = "../attentionscorecalculator/head_pose_extraction/extracted_poses"
+
+
     _CLASS_PAYING_ATTENTION = "paying_attention"
     _CLASS_NOT_PAYING_ATTENTION = "not_paying_attention"
 
@@ -17,20 +22,23 @@ class ArffGenerator(object):
     _ARFF_FILE_CLASS = "@ATTRIBUTE class 	{paying_attention,not_paying_attention}"
     _ARFF_FILE_DATA = "@DATA"
     _ARFF_FILE_NAME = "/original.arff"
+    _OUTPUT_FILE_EXTENSION = ".txt"
 
-    def __init__(self, path_to_main_image_folder):
-        self._path_to_main_dir = path_to_main_image_folder
+    def __init__(self):
+        #self._path_to_main_dir = path_to_main_image_folder
+        pass
 
     def generate_arff_from_openface_output(self):
         """main caller function"""
-        self._construct_arff_file(self._path_to_main_dir)
+        self._arff_file_with_path = self._REL_PATH_TO_ARFF_DIR + self._ARFF_FILE_NAME
+        self._construct_arff_file(self._REL_PATH_TO_ARFF_DIR)
 
     def _construct_arff_file(self, output_path):
         """initialises the .arff file with metadata"""
         arff_file_location = output_path + self._ARFF_FILE_NAME
-        with open(arff_file_location, 'w+') as arff_file:
+        with open(self._arff_file_with_path, 'w+') as arff_file:
+            self._generate_arff_metadata()
             arff_file.write(arff_metadata)
-        return arff_file_location
 
     def _generate_arff_metadata(self):
         """generates the metadata for the original.arff file"""
@@ -39,20 +47,21 @@ class ArffGenerator(object):
         return arff_metadata
 
     def _combine_all_output(self):
-        """generator, yields paths? nice!"""
+        """writes all output in correct format to arff file"""
         output_parser = HeadPoseOutputParser()
-        for attention_yes_no_dir in os.listdir(self._path_to_main_dir):
-            current_dir = self._path_to_main_dir + "/" + attention_yes_no_dir
-            for image_dir in attention_yes_no_dir:
-                current_image_dir = current_dir + "/" + image_dir + "/" + "OUTPUTFILEHIERZO"
-                pass
-
-    def _extract_head_pose_from_output_file(self, path_to_file):
-        """extract the estimated head pose for an image. 
-        IF SUCCESSFULL -> extract yes/no (dirpath), rx, ry, rz"""
-        # use code found in attentionscorecalculator!
+        image_counter = 0
+        for attention_yes_no_dir in os.listdir(self._REL_PATH_TO_OPENFACE_OUTPUT_MAIN_DIR):
+            if attention_yes_no_dir != ".gitkeep":
+                current_dir = self._REL_PATH_TO_OPENFACE_OUTPUT_MAIN_DIR + "/" + attention_yes_no_dir
+                for image_dir in os.listdir(current_dir):
+                    image_counter += 1
+                    outputfile_path = current_dir + "/" + image_dir + "/" + image_dir + self._OUTPUT_FILE_EXTENSION
+                    arff_data_line = output_parser.extract_valid_head_poses_from_output_file(outputfile_path, \
+                                                                                             image_counter)
+                    with open(self._arff_file_with_path, 'a') as arff_file:
+                        arff_file.write(arff_data_line)
 
 if __name__ == "__main__":
     path_to_main_image_folder = sys.argv[1]
     arff_generator = ArffGenerator(path_to_main_image_folder)
-    pass
+    arff_generator.generate_arff_from_openface_output()
